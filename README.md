@@ -1,6 +1,6 @@
 # AI Alt Text Generator 🖼️🤖
 
-AI Alt Text Generator is a web application that utilizes cutting-edge AI technologies to automatically generate alternative text for images. The application aims to enhance web accessibility, especially for visually impaired users.
+AI Alt Text Generator is a web application that utilizes AI technologies to automatically generate alternative text for images. The application aims to enhance web accessibility, especially for visually impaired users.
 
 ## Features ✨
 
@@ -18,7 +18,6 @@ AI Alt Text Generator is a web application that utilizes cutting-edge AI technol
 - **Google Cloud Vision API**: An AI-powered image analysis service from Google. It's used for extracting information from images.
 - **OpenAI API**: Utilizes GPT models for natural language processing and generation. It's used for creating descriptive text based on image analysis.
 - **browser-image-compression**: An NPM package for client-side image compression in the browser. It helps in reducing the size of the images before processing.
-- **dotenv**: A zero-dependency module that loads environment variables from a `.env` file into `process.env`. Used for managing API keys and other sensitive information.
 
 ## Getting Started 🚀
 
