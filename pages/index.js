@@ -119,8 +119,8 @@ export default function Home() {
                       }}
                     >
                       <code>
-                        &lt;img src="YOUR_IMAGE_SRC" alt="{choice.text.trim()}"
-                        /&gt;
+                        &lt;img src=&quot;YOUR_IMAGE_SRC&quot; alt=&quot;
+                        {choice.text.trim()}&quot; /&gt;
                       </code>
                     </pre>
                   </div>
