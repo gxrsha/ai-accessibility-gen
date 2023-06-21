@@ -5,7 +5,7 @@ import LoadingSpinner from '../components/LoadingSpinner'
 export default function Home() {
   const [imageSrc, setImageSrc] = useState(null)
   const [altText, setAltText] = useState(null)
-  const [loading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleImageUpload = async (event) => {
     setIsLoading(true)
@@ -95,7 +95,7 @@ export default function Home() {
           </div>
         </div>
         <div style={{ width: '100%', textAlign: 'center' }}>
-          {altText && (
+          {altText && !isLoading && (
             <>
               <h3>Generated Text</h3>
               <div
@@ -109,12 +109,26 @@ export default function Home() {
                 {altText.map((choice, index) => (
                   <div style={{ marginTop: '1rem' }} key={index}>
                     {index + 1}. {choice.text.trim()}
+                    <pre
+                      style={{
+                        backgroundColor: '#222',
+                        color: '#ccc',
+                        border: '1px solid #ddd',
+                        padding: '20px',
+                        whiteSpace: 'pre-wrap',
+                      }}
+                    >
+                      <code>
+                        &lt;img src="YOUR_IMAGE_SRC" alt="{choice.text.trim()}"
+                        /&gt;
+                      </code>
+                    </pre>
                   </div>
                 ))}
               </div>
             </>
           )}
-          {loading && <LoadingSpinner />}
+          {isLoading && <LoadingSpinner />}
         </div>
       </div>
     </>
