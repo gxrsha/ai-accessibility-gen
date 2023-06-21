@@ -1,34 +1,46 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# AI Alt Text Generator 🖼️🤖
 
-## Getting Started
+AI Alt Text Generator is a web application that utilizes cutting-edge AI technologies to automatically generate alternative text for images. The application aims to enhance web accessibility, especially for visually impaired users.
 
-First, run the development server:
+## Features ✨
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+- **Upload Image**: Users can upload an image of their choice to be analyzed.
+- **Image Analysis**: Utilizes Google Cloud Vision API to analyze various aspects of the uploaded image, including labels, landmarks, faces, text, and objects.
+- **Alt Text Generation**: Uses OpenAI's GPT (Generative Pre-trained Transformer) to generate descriptive and concise alternative text for the image based on the analysis.
+- **Display Results**: The generated alt text is displayed on the user interface.
+- **Image Compression**: Compresses uploaded images for faster processing and lower bandwidth usage.
+- **Loading Spinner**: Displays a loading spinner to indicate processing.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Technologies & Libraries 🛠️
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+- **React**: A JavaScript library for building user interfaces. Used for crafting the front-end components.
+- **Next.js**: A React framework for server-side rendering and static site generation.
+- **Google Cloud Vision API**: An AI-powered image analysis service from Google. It's used for extracting information from images.
+- **OpenAI API**: Utilizes GPT models for natural language processing and generation. It's used for creating descriptive text based on image analysis.
+- **browser-image-compression**: An NPM package for client-side image compression in the browser. It helps in reducing the size of the images before processing.
+- **dotenv**: A zero-dependency module that loads environment variables from a `.env` file into `process.env`. Used for managing API keys and other sensitive information.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+## Getting Started 🚀
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+### Prerequisites
 
-## Learn More
+- Node.js
+- NPM (Node Package Manager)
+- Google Cloud account with access to Vision API
+- OpenAI API access
 
-To learn more about Next.js, take a look at the following resources:
+### Installation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Clone the repository
+2. Navigate to the project directory
+3. Install the dependencies
+4. Create a `.env.local` file in the project root and set your Google Cloud and OpenAI API keys.
+5. Start the development server
+6. Open your web browser and navigate to `http://localhost:3000`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Acknowledgments 🙏
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Google Cloud Vision API
+- OpenAI GPT
+- Next.js
+- React
