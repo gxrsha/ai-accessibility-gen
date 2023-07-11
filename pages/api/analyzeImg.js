@@ -56,15 +56,12 @@ export default async (req, res) => {
     MaxLabels: 10,
   }
 
-  // let generatedAltTexts = []
-
   try {
+    // Retrieving data from AWS
     const awsPromise = async () => {
-      // AWS
       const rekognitionData = await rekognitionClient.send(
         new DetectLabelsCommand(awsParms)
       )
-      console.log('Data received from AWS: ', rekognitionData.Labels)
       let awsPrompt = 'This image contains the following labels: '
       awsPrompt += `${rekognitionData.Labels.filter(
         (label) => label.Confidence > 80
@@ -82,8 +79,6 @@ export default async (req, res) => {
         temperature: 0.3,
       })
 
-      console.log('sammy -- awsPrompt: ', awsPrompt)
-
       return {
         provider: 'Amazon Rekognition',
         generatedAltText: awsChatCompletion.data.choices[0].text,
@@ -92,6 +87,7 @@ export default async (req, res) => {
       }
     }
 
+    // Retrieving Data from Google
     const googlePromise = async () => {
       // Google
       const [result] = await visionClient.annotateImage({
@@ -104,8 +100,6 @@ export default async (req, res) => {
           { type: 'OBJECT_LOCALIZATION' },
         ],
       })
-
-      console.log('Google CV result: ', result)
 
       let googlePrompt = 'The image contains the following information: '
       if (result.labelAnnotations) {
@@ -139,8 +133,6 @@ export default async (req, res) => {
           .join(', ')}. `
       }
 
-      console.log('sammy -- googlePrompt: ', googlePrompt)
-
       const googleChatCompletion = await openai.createCompletion({
         model: 'text-davinci-003',
         n: 3,
@@ -159,6 +151,7 @@ export default async (req, res) => {
       }
     }
 
+    // Retrieving Data from Azure
     const azurePromise = async () => {
       const azureVisualFeatures = [
         'Categories',
@@ -173,8 +166,6 @@ export default async (req, res) => {
         imageBufferForAzure,
         { visualFeatures: azureVisualFeatures }
       )
-
-      console.log('sammy -- azure Result: ', azureResult)
 
       let azurePrompt = 'The image contains the following information: '
 
@@ -196,8 +187,6 @@ export default async (req, res) => {
       if (azureResult.color) {
         azurePrompt += `Dominant Color: ${azureResult.color.dominantColorForeground}. `
       }
-
-      console.log('sammy -- azurePrompt: ', azurePrompt)
 
       const azureChatCompletion = await openai.createCompletion({
         model: 'text-davinci-003',
