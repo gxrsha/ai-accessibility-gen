@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import imageCompression from 'browser-image-compression'
 import LoadingSpinner from '../components/LoadingSpinner'
+import dynamic from 'next/dynamic'
+
+const ReactJson = dynamic(import('react-json-view'), { ssr: false })
 
 export default function Home() {
   const [imageSrc, setImageSrc] = useState(null)
@@ -96,10 +99,8 @@ export default function Home() {
               >
                 {altText.map((data, index) => (
                   <div style={{ marginTop: '1rem' }} key={index}>
-                    <div style={{fontWeight: 'bold'}}>{data.provider}</div>
-                    <p>
-                    {data.generatedAltText.trim()}
-                    </p>
+                    <div style={{ fontWeight: 'bold' }}>{data.provider}</div>
+                    <p>{data.generatedAltText.trim()}</p>
                     <pre
                       style={{
                         backgroundColor: '#222',
@@ -114,6 +115,14 @@ export default function Home() {
                         {data.generatedAltText.trim()}&quot; /&gt;
                       </code>
                     </pre>
+                    <div>
+                      <ReactJson
+                        src={data.response}
+                        theme="tube"
+                        collapsed={1}
+                        name={`${data.provider} response`}
+                      />
+                    </div>
                   </div>
                 ))}
               </div>
