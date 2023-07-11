@@ -32,18 +32,6 @@ export default function Home() {
         console.error('Error compressing image:', error)
       }
     }
-    // const reader = new FileReader()
-
-    // reader.onloadend = () => {
-    //   // Get the image data (base64)
-    //   setImageSrc(reader.result)
-    //   const base64data = reader.result
-    //   analyzeImage(base64data)
-    // }
-
-    // if (file) {
-    //   reader.readAsDataURL(file)
-    // }
   }
 
   const analyzeImage = async (image) => {
@@ -55,7 +43,7 @@ export default function Home() {
 
     const data = await response.json()
     console.log('data: ', data)
-    setAltText(data.choices)
+    setAltText(data)
     setIsLoading(false)
   }
 
@@ -106,9 +94,12 @@ export default function Home() {
                   textAlign: 'start',
                 }}
               >
-                {altText.map((choice, index) => (
+                {altText.map((data, index) => (
                   <div style={{ marginTop: '1rem' }} key={index}>
-                    {index + 1}. {choice.text.trim()}
+                    <div style={{fontWeight: 'bold'}}>{data.provider}</div>
+                    <p>
+                    {data.generatedAltText.trim()}
+                    </p>
                     <pre
                       style={{
                         backgroundColor: '#222',
@@ -120,7 +111,7 @@ export default function Home() {
                     >
                       <code>
                         &lt;img src=&quot;YOUR_IMAGE_SRC&quot; alt=&quot;
-                        {choice.text.trim()}&quot; /&gt;
+                        {data.generatedAltText.trim()}&quot; /&gt;
                       </code>
                     </pre>
                   </div>
