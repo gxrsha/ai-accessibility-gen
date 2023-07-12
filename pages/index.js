@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import imageCompression from 'browser-image-compression'
 import LoadingSpinner from '../components/LoadingSpinner'
+import JsonView from '@uiw/react-json-view'
+import { darkTheme } from '@uiw/react-json-view/dark'
 
 export default function Home() {
   const [imageSrc, setImageSrc] = useState(null)
@@ -96,10 +98,8 @@ export default function Home() {
               >
                 {altText.map((data, index) => (
                   <div style={{ marginTop: '1rem' }} key={index}>
-                    <div style={{fontWeight: 'bold'}}>{data.provider}</div>
-                    <p>
-                    {data.generatedAltText.trim()}
-                    </p>
+                    <div style={{ fontWeight: 'bold' }}>{data.provider}</div>
+                    <p>{data.generatedAltText.trim()}</p>
                     <pre
                       style={{
                         backgroundColor: '#222',
@@ -114,6 +114,14 @@ export default function Home() {
                         {data.generatedAltText.trim()}&quot; /&gt;
                       </code>
                     </pre>
+                    <div>
+                      <JsonView
+                        value={data.response}
+                        collapsed={1}
+                        style={customTheme}
+                        keyName={`${data.provider} response`}
+                      />
+                    </div>
                   </div>
                 ))}
               </div>
@@ -124,4 +132,33 @@ export default function Home() {
       </div>
     </>
   )
+}
+
+// Styles for the json object
+const customTheme = {
+  '--w-rjv-font-family': 'monospace',
+  '--w-rjv-color': '#9cdcfe',
+  '--w-rjv-background-color': '#1e1e1e',
+  '--w-rjv-line-color': '#323232',
+  '--w-rjv-arrow-color': 'var(--w-rjv-color)',
+  '--w-rjv-edit-color': 'var(--w-rjv-color)',
+  '--w-rjv-add-color': 'var(--w-rjv-color)',
+  '--w-rjv-info-color': '#656565',
+  '--w-rjv-update-color': '#ebcb8b',
+  '--w-rjv-copied-color': '#9cdcfe',
+  '--w-rjv-copied-success-color': '#28a745',
+
+  '--w-rjv-curlybraces-color': '#d4d4d4',
+  '--w-rjv-brackets-color': '#d4d4d4',
+
+  '--w-rjv-type-string-color': '#ce9178',
+  '--w-rjv-type-int-color': '#268bd2',
+  '--w-rjv-type-float-color': '#859900',
+  '--w-rjv-type-bigint-color': '#268bd2',
+  '--w-rjv-type-boolean-color': '#559bd4',
+  '--w-rjv-type-date-color': '#586e75',
+  '--w-rjv-type-url-color': '#649bd8',
+  '--w-rjv-type-null-color': '#d33682',
+  '--w-rjv-type-nan-color': '#859900',
+  '--w-rjv-type-undefined-color': '#586e75',
 }
