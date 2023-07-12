@@ -136,6 +136,7 @@ export default function Home() {
 
 // Styles for the json object
 const customTheme = {
+  padding: '20px',
   '--w-rjv-font-family': 'monospace',
   '--w-rjv-color': '#9cdcfe',
   '--w-rjv-background-color': '#1e1e1e',
