@@ -37,16 +37,22 @@ export default function Home() {
   }
 
   const analyzeImage = async (image) => {
-    const response = await fetch('/api/analyzeImg', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ image }),
-    })
+    try {
+      const response = await fetch('/api/analyzeImg', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image }),
+      })
+  
+      const data = await response.json()
+      console.log('data: ', data)
+      setAltText(data)
+      setIsLoading(false)
 
-    const data = await response.json()
-    console.log('data: ', data)
-    setAltText(data)
-    setIsLoading(false)
+    } catch (err) {
+      console.log('There was an error processing request: ', err)
+
+    }
   }
 
   return (

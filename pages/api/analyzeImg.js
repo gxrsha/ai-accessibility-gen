@@ -1,5 +1,5 @@
 import { ImageAnnotatorClient } from '@google-cloud/vision'
-import { Configuration, OpenAIApi } from 'openai'
+import OpenAI from 'openai'
 import {
   RekognitionClient,
   DetectLabelsCommand,
@@ -33,11 +33,10 @@ const visionClient = new ImageAnnotatorClient({
   credentials: googleCredentials,
 })
 
-const configuration = new Configuration({
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 })
 
-const openai = new OpenAIApi(configuration)
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default async (req, res) => {
@@ -59,32 +58,35 @@ export default async (req, res) => {
   try {
     // Retrieving data from AWS
     const awsPromise = async () => {
-      const rekognitionData = await rekognitionClient.send(
-        new DetectLabelsCommand(awsParms)
-      )
-      let awsPrompt = 'This image contains the following labels: '
-      awsPrompt += `${rekognitionData.Labels.filter(
-        (label) => label.Confidence > 80
-      )
-        .map((label) => label.Name)
-        .join(', ')}. `
-
-      const awsChatCompletion = await openai.createCompletion({
-        model: 'text-davinci-003',
-        n: 1,
-        max_tokens: 150,
-        prompt:
-          awsPrompt +
-          '\n\nGenerate a detailed and concise alt text for this image, let the text begin with `This image shows`: ',
-        temperature: 0.3,
-      })
-
-      return {
-        provider: 'Amazon Rekognition',
-        generatedAltText: awsChatCompletion.data.choices[0].text,
-        generatedPrompt: awsPrompt.trim(),
-        response: rekognitionData,
-      }
+        const rekognitionData = await rekognitionClient.send(
+          new DetectLabelsCommand(awsParms)
+        )
+        let awsPrompt = 'This image contains the following labels: '
+        awsPrompt += `${rekognitionData.Labels.filter(
+          (label) => label.Confidence > 80
+        )
+          .map((label) => label.Name)
+          .join(', ')}. `
+  
+  
+        const awsChatCompletion = await openai.chat.completions.create({
+          model: 'gpt-3.5-turbo',
+          messages: [{
+            role: 'system',
+            content: 'You are a helpful alt text generator. Your primary function is to generate detailed and concise alt text for an image given some words detected from computer vision'
+          }, {
+            role: 'user',
+            content: awsPrompt + ' Generate a detailed and concise alt text for this image.'
+          }],
+          temperature: 0.3,
+        })
+  
+        return {
+          provider: 'Amazon Rekognition',
+          generatedAltText: awsChatCompletion.choices[0].message.content,
+          generatedPrompt: awsPrompt.trim(),
+          response: rekognitionData,
+        }
     }
 
     // Retrieving Data from Google
@@ -133,19 +135,21 @@ export default async (req, res) => {
           .join(', ')}. `
       }
 
-      const googleChatCompletion = await openai.createCompletion({
-        model: 'text-davinci-003',
-        n: 3,
-        max_tokens: 150,
-        prompt:
-          googlePrompt +
-          '\n\nGenerate a detailed and concise alt text for this image, let the text begin with `This image shows`: ',
+      const googleChatCompletion = await openai.chat.completions.create({
+        model: 'gpt-3.5-turbo',
+        messages: [{
+          role: 'system',
+          content: 'You are a helpful alt text generator. Your primary function is to generate detailed and concise alt text for an image given some words detected from computer vision'
+        }, {
+          role: 'user',
+          content: googlePrompt + ' Generate a detailed and concise alt text for this image.'
+        }],
         temperature: 0.3,
       })
 
       return {
         provider: 'Google CV',
-        generatedAltText: googleChatCompletion.data.choices[0].text,
+        generatedAltText: googleChatCompletion.choices[0].message.content,
         generatedPrompt: googlePrompt.trim(),
         response: result,
       }
@@ -188,19 +192,21 @@ export default async (req, res) => {
         azurePrompt += `Dominant Color: ${azureResult.color.dominantColorForeground}. `
       }
 
-      const azureChatCompletion = await openai.createCompletion({
-        model: 'text-davinci-003',
-        n: 3,
-        max_tokens: 150,
-        prompt:
-          azurePrompt +
-          '\n\nGenerate a detailed and concise alt text for this image, let the text begin with `This image shows`: ',
+      const azureChatCompletion = await openai.chat.completions.create({
+        model: 'gpt-3.5-turbo',
+        messages: [{
+          role: 'system',
+          content: 'You are a helpful alt text generator. Your primary function is to generate detailed and concise alt text for an image given some words detected from computer vision'
+        }, {
+          role: 'user',
+          content: azurePrompt + ' Generate a detailed and concise alt text for this image.'
+        }],
         temperature: 0.3,
       })
 
       return {
         provider: 'Azure Computer Vision',
-        generatedAltText: azureChatCompletion.data.choices[0].text,
+        generatedAltText: azureChatCompletion.choices[0].message.content,
         generatedPrompt: azurePrompt.trim(),
         response: azureResult,
       }
@@ -211,6 +217,8 @@ export default async (req, res) => {
       googlePromise(),
       azurePromise(),
     ])
+
+    console.log('generatedAltTexts: ', generatedAltTexts)
 
     res.status(200).json(generatedAltTexts)
   } catch (error) {
