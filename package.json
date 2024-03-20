@@ -17,7 +17,7 @@
     "browser-image-compression": "^2.0.2",
     "data-uri-to-buffer": "^5.0.1",
     "next": "13.4.6",
-    "openai": "^3.3.0",
+    "openai": "^4.29.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
