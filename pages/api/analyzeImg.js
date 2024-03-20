@@ -104,34 +104,25 @@ export default async (req, res) => {
       })
 
       let googlePrompt = 'The image contains the following information: '
-      if (result.labelAnnotations) {
+      if (result.labelAnnotations && result.labelAnnotations.length) {
         googlePrompt += `Labels: ${result.labelAnnotations
-          .filter((label) => label.score > 0.8)
+          .filter((label) => label.score > 0.5)
           .map((label) => label.description)
           .join(', ')}. `
       }
-      if (result.landmarkAnnotations) {
+      if (result.landmarkAnnotations && result.landmarkAnnotations.length) {
         googlePrompt += `Landmarks: ${result.landmarkAnnotations
-          .filter((label) => label.score > 0.8)
+          .filter((label) => label.score > 0.5)
           .map((landmark) => landmark.description)
           .join(', ')}. `
       }
-      if (result.faceAnnotations) {
-        googlePrompt += `Faces: ${result.faceAnnotations
-          .filter((label) => label.score > 0.8)
-          .map((face) => face.description)
-          .join(', ')}. `
-      }
-      if (result.textAnnotations) {
-        googlePrompt += `Text: ${result.textAnnotations
-          .filter((label) => label.score > 0.8)
-          .map((text) => text.description)
-          .join(', ')}. `
-      }
-      if (result.localizedObjectAnnotations) {
+      if (
+        result.localizedObjectAnnotations &&
+        result.localizedObjectAnnotations.length
+      ) {
         googlePrompt += `Objects: ${result.localizedObjectAnnotations
-          .filter((label) => label.score > 0.8)
-          .map((object) => object.description)
+          .filter((label) => label.score > 0.5)
+          .map((object) => object.name)
           .join(', ')}. `
       }
 
@@ -183,7 +174,10 @@ export default async (req, res) => {
         if (azureResult.description.captions) {
           azurePrompt += `Description: ${azureResult.description.captions[0].text}. `
         }
-        if (azureResult.description.tags) {
+        if (
+          azureResult.description.tags &&
+          azureResult.description.tags.length
+        ) {
           azurePrompt += `Tags: ${azureResult.description.tags.join(', ')}. `
         }
       }
